@@ -1,9 +1,12 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import "./home.css";
 import { RiTwitterXFill } from "react-icons/ri";
 import user1 from "./assets/user.png";
 import user2 from "./assets/user2.png";
 import user3 from "./assets/user3.png";
+import music from "./assets/music.mp3";
+import claim from "./assets/claim.mp3";
+import eror from "./assets/eror.mp3";
 
 const GAME_DURATION = 60000;
 
@@ -15,13 +18,8 @@ const DIFFICULTY_LEVELS = {
 
 const OBJECT_TYPES = [
   { type: "capsule", score: 1, className: "pill capsule" },
-  { type: "bonk", score: 3, className: "pill bonk" },
-  { type: "wif", score: 5, className: "pill wif" },
-  { type: "tnsr", score: 8, className: "pill tnsr" },
   { type: "sol", score: 10, className: "pill sol" },
-  { type: "bad", score: -3, className: "pill bad" },
-  { type: "nosolana", score: -7, className: "pill nosolona" },
-  { type: "scam", score: -5, className: "pill scam" },
+  { type: "bad", score: -1, className: "pill bad" },
 ];
 
 const characters = [
@@ -59,6 +57,10 @@ export const App = () => {
   const [objects, setObjects] = useState([]);
   const [score, setScore] = useState(0);
   const [timeLeft, setTimeLeft] = useState(GAME_DURATION);
+  const [audio] = useState(new Audio(music));
+  const [errorAudio] = useState(new Audio(eror));
+  const [claimAudio] = useState(new Audio(claim));
+  const [isMusicStarted, setIsMusicStarted] = useState(false);
 
   const timeoutRef = useRef(null);
   const timeRef = useRef(GAME_DURATION);
@@ -113,10 +115,34 @@ export const App = () => {
     setScore((s) => s + obj.score);
     setObjects([]);
 
+    // Ses çal
+    if (obj.score > 0) {
+      claimAudio.currentTime = 0;
+      claimAudio.play();
+    } else if (obj.score < 0) {
+      errorAudio.currentTime = 0;
+      errorAudio.play();
+    }
+
     setTimeout(() => {
       spawnNext();
     }, 100);
   };
+
+  useEffect(() => {
+    const playMusic = () => {
+      if (!isMusicStarted) {
+        audio.loop = true;
+        audio.volume = 0.1;
+        audio.play().catch((err) => console.log("Autoplay blocked:", err));
+        setIsMusicStarted(true);
+      }
+    };
+
+    document.addEventListener("click", playMusic, { once: true });
+
+    return () => document.removeEventListener("click", playMusic);
+  }, [isMusicStarted, audio]);
 
   // ----------------------- UI -----------------------
 
