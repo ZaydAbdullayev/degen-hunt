@@ -7,6 +7,7 @@ import user3 from "./assets/user3.png";
 import music from "./assets/music.mp3";
 import claim from "./assets/claim.mp3";
 import eror from "./assets/eror.mp3";
+import capsule from "./assets/capsul.png";
 
 const GAME_DURATION = 60000;
 
@@ -182,6 +183,9 @@ export const App = () => {
               </div>
             ))}
           </div>
+          <button className="go-home" onClick={() => setGamePhase("intro")}>
+            Go Home
+          </button>
         </div>
       )}
 
@@ -234,6 +238,10 @@ export const App = () => {
             )}
           </div>
           <div className="game-stage">
+            <div className="title">
+              <p>just catch this object</p>
+              <img src={capsule} alt="capsule" />
+            </div>
             {objects.map((obj) => (
               <Pill key={obj.id} {...obj} onClick={handlePillClick} />
             ))}
