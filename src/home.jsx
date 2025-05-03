@@ -185,7 +185,7 @@ export const App = () => {
             <button onClick={() => setGamePhase("character")}>START</button>
             <button
               onClick={() =>
-                window.open("https://twitter.com/solana", "_blank")
+                window.open("https://x.com/degenhunt_sol", "_blank")
               }
             >
               FOLLOW US <RiTwitterXFill />
