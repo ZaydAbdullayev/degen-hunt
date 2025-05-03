@@ -29,6 +29,31 @@ const characters = [
   { name: "char3", img: user3 },
 ];
 
+const getRandomUsername = () => {
+  const prefixes = [
+    "@sol_",
+    "@moon_",
+    "@dark_",
+    "@jack_",
+    "@ghost_",
+    "@neo_",
+    "@www_",
+    "@bot_",
+    "@user_",
+    "@dev_",
+  ];
+  const suffix = Math.floor(Math.random() * 1000);
+  const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+  return `${prefix}${suffix}`;
+};
+
+const getRandomScore = () => Math.floor(Math.random() * 100) + 100; // 100–199
+
+const leaders = Array.from({ length: 15 }, (_, i) => ({
+  name: getRandomUsername(),
+  score: getRandomScore(),
+}));
+
 function getRandomPosition() {
   const container = document.querySelector(".game-stage");
   if (!container) return { x: 0, y: 0 };
@@ -54,6 +79,7 @@ export const App = () => {
   const [selectedCharacter, setSelectedCharacter] = useState(null);
   const [difficulty, setDifficulty] = useState(null);
   const [objectLifespan, setObjectLifespan] = useState(1000);
+  const [showLeaderboard, setShowLeaderboard] = useState(false);
 
   const [objects, setObjects] = useState([]);
   const [score, setScore] = useState(0);
@@ -153,7 +179,9 @@ export const App = () => {
         <div className="center-screen">
           <h1>DEGEN HUNT</h1>
           <div className="btns">
-            <button>LEADER BOARD</button>
+            <button onClick={() => setShowLeaderboard(true)}>
+              LEADER BOARD
+            </button>
             <button onClick={() => setGamePhase("character")}>START</button>
             <button
               onClick={() =>
@@ -259,6 +287,22 @@ export const App = () => {
             </button>
             <button onClick={() => setGamePhase("intro")}>GO HOME</button>
           </div>
+        </div>
+      )}
+
+      {showLeaderboard && (
+        <div className="modal">
+          <h2>LEADER BOARD</h2>
+          <div className="leaderboard">
+            {leaders.map((leader, index) => (
+              <div key={index} className="leader-item">
+                <span>{index + 1}</span>
+                <span>{leader.name}</span>
+                <span>{leader.score}</span>
+              </div>
+            ))}
+          </div>
+          <button onClick={() => setShowLeaderboard(false)}>CLOSE</button>
         </div>
       )}
     </div>
